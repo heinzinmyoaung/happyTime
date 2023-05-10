@@ -1,44 +1,45 @@
 <template>
     <LoadingSpinner class="z-10" :loading="isLoading"/>
-    <div class="w-full h-36 bg-white flex justify-center ">
-        <div class=" w-2/5 inset-x-0 m-auto flex flex-col">
-            <span class=" text-4xl font-base">Last Step-Checkout</span> 
-            <span class=" pt-3 text-xl font-base">HappyTime</span> 
+<div class=" bg-gray-100 dark:bg-gray-800">
+    <div class="bg-white dark:bg-gray-800  w-full h-28 md:h-36  flex justify-center p-4">
+        <div class="w-full  md:w-4/5 lg:w-3/5 xl:w-2/5 inset-x-0 m-auto flex flex-col">
+            <span class=" text-lg md:text-4xl font-base">Last Step-Checkout</span> 
+            <span class=" pt-3 text-sm md:text-xl font-base">HappyTime</span> 
         </div>
         
     </div>
-    <div class=" w-full relative py-6 mb-6">
-        <div id= "cartslidebar" class="bg-white top-6  w-2/5  inset-x-0 mx-auto  rounded-md" >   
+    <div class=" w-full relative py-6 mb-8 p-4">
+        <div id= "cartslidebar" class="bg-white dark:bg-black/20 top-6 w-full md:w-4/5 lg:w-3/5 xl:w-2/5 inset-x-0 mx-auto rounded-md" >   
             <!-- <div class=" overflow-y-auto pb-48 lg:pb-52"> -->
-        <div class=" px-6 py-4  border-b border-gray-200 w-full">
-            <span class="  text-xl font-semibold">Order Detail</span>
+            <div class=" px-6 py-4 md:py-5  border-b-2   border-gray-200/70 dark:border-gray-500/30 w-full">
+            <span class="text-lg md:text-xl font-semibold">Order Detail</span>
         </div>
-        <div  class="px-6 mb-20 ">
+        <div  class="px-3 md:px-6 mb-12 md:mb-20 ">
             <!-- <div v-for="cartfood in cartfood(carts.foodid)" :key="cartfood.id" class="flex" > -->
-            <div v-for=" (carts,index) in cart" class="flex py-6 border-b border-gray-200">
-                <div  class="flex flex-row flex-none  align-content-center pr-3">{{isButtonDisabled  }}
+            <div v-for=" (carts,index) in cart" class="flex py-6 border-b  border-gray-200/70 dark:border-gray-500/30">
+                <div  class="flex flex-row flex-none  align-content-center pr-3">
                     <button class=" text-cyan-500 text-lg"  :disabled="isButtonDisabled" @click="reduce(index, 'reduce')">-</button> 
                     <div  class="my-auto mx-2 text-sm w-6 text-center">{{carts.quantity}}</div>
                     <button class="text-cyan-500 text-lg" @click.prevent="add(index,'add')" >+</button> 
                 </div>
-                <div  class="pr-3 flex-none m-auto" >
-                    <img  :src= "`./images/${carts.foodimage}`"  alt="" class=" w-16 h-16 rounded-md" >
+                <div  class="pr-3 flex-none m-auto hidden md:block" >
+                    <img  :src= "`./images/${carts.foodimage}`"  alt="" class=" w-16 h-16 md:w-16 md:h-16 rounded-md " >
                 </div>
 
-                <div  class=" flex-auto m-auto">
-                    <span class="font-semibold text-md">{{ carts.foodname }}</span>
-                    <p v-for="additionalnames in carts.additionalname"  class="text-xs">
+                <div  class=" flex-auto m-auto text-sm md:text-base">
+                    <span class="font-semibold">{{ carts.foodname }}</span>
+                    <p v-for="additionalnames in carts.additionalname"  class="text-xs text-gray-600 dark:text-gray-300">
                             {{ additionalnames }}
                     </p>
                 </div>
                 <div  v-if="carts.quantity == 0" @click="remove(index)" class="cursor-pointer flex-none m-auto text-base font-bold text-red-600">
                         remove
                 </div>
-                <div v-else  class=" flex-none m-auto text-base">
+                <div v-else  class=" flex-none  text-base">
                         {{  $filters.formattedCurrency(carts.totalprice) }}
                 </div>
             </div>
-            <div  class="py-6 flex ">
+            <div  class="py-6 flex dark:border-gray-500/30 text-sm md:text-base">
                 <div class="flex-1">Subtotal</div>
                 <div class="flex-none"> {{ $filters.formattedCurrency(total()) }}</div>
             </div>
@@ -49,20 +50,21 @@
 
     
 
-    <div class=" h-28 flex justify-center w-full bg-white fixed bottom-0  border-t border-gray-200 ">
-        <div class=" w-2/5 inset-x-0 m-auto">
-            <div class=" py-5 flex">
-                <div class="flex flex-1 flex-col">
-                    <p class="text-lg ">Total</p>
-                    <p class="text-xl font-medium">{{ $filters.formattedCurrency(total()) }}</p>
+    <div class=" h-20 md:h-28 flex justify-center w-full bg-white dark:bg-gray-800  fixed bottom-0 border-t border-gray-200/70 dark:border-gray-500/20">
+        <div class=" px-4 w-full md:w-4/5 lg:w-3/5 xl:w-2/5 inset-x-0 m-auto">
+            <div class=" md:py-5 flex">
+                <div class="flex flex-1 flex-col pr-4 text-base md:text-lg font-medium">
+                    <p class="font-normal">Total</p>
+                    <p>{{ $filters.formattedCurrency(total()) }}</p>
                 </div>
                
-                <div class="flex-initial w-64 h-12 bg-green-600 rounded-md flex justify-center m-auto" @click="order()">
-                    <button class=" bg-green-600 rounded-md text-base text-white" >Place Order </button>
+                <div class="flex-initial w-64 h-9 md:h-12 bg-green-600 rounded-md flex justify-center m-auto" @click="order()">
+                    <button class=" bg-green-600 rounded-md text-sm md:text-base text-white" >Place Order </button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script setup>
@@ -178,7 +180,7 @@ export default defineComponent({
     
     }, 
     mounted: function(){
-        document.body.style.backgroundColor = 'rgb(229 231 235)';
+        document.body.style.overflowY = 'auto';
         if(localStorage.getItem('cart') !== null){
             // alert(localStorage.cart)
             const cartarray= useForm(

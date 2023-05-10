@@ -6,7 +6,8 @@
         </div>
         
     </div> -->
-    <div class="py-6">
+<div class=" p-4 bg-gray-100 dark:bg-gray-800 ">
+    <div  class="py-6">
 
         <div v-motion-pop class="mb-6">
             <div class="flex justify-center">
@@ -14,48 +15,48 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </div>
-            <span class=" flex justify-center font-bold">Your order was successfully placed</span>
+            <span class=" flex justify-center font-semibold text-base md:text-lg">Your order was successfully placed</span>
         </div> 
 
-        <div id= "cartslidebar" class=" bg-white top-6  w-2/5  inset-x-0 mx-auto border border-gray-200 rounded-lg shadow-md " >   
+        <div id= "cartslidebar" class=" bg-white dark:bg-black/20 top-6 w-full  md:w-4/5 lg:w-3/5 xl:w-2/5  inset-x-0 mx-auto border border-gray-200 dark:border-none rounded-lg shadow-md " >   
             <!-- <div class=" overflow-y-auto pb-48 lg:pb-52"> -->
-            <div  class=" flex flex-col p-6 bg-white  border-b border-gray-200/70 rounded-lg">
+            <div  class=" flex flex-col p-4 bg-white dark:bg-black/20  border-b border-gray-200/70  dark:border-gray-500/30 rounded-t-lg">
                 <div class=" flex">
-                    <span class="flex-1 text-xs  text-gray-500">Order Created at : {{ moment(orders.created_at).format('h-mm, M-Do-YYYY') }}</span>
-                    <span class=" text-green-600 ">COMPLETED</span>
+                    <span class="flex-1 text-xs  text-gray-500">Order Created at : {{ moment(orders.created_at).format('h:mm, M-Do-YYYY') }}</span>
+                    <span class=" text-green-600 font-light text-sm md:text-base">COMPLETED</span>
                 </div>
-                <div class="font-bold">
+                <div class="font-bold text-base">
                     # {{  orders.id }}
                 </div>        
             </div >
-            <div  class="px-6 bg-gray-50">
+            <div  class="px-4 bg-gray-50 dark:bg-black/20">
                 <!-- <div v-for="cartfood in cartfood(carts.foodid)" :key="cartfood.id" class="flex" > -->
                 
                 <div v-for="orderdetail in orderdetails" class="flex py-6 ">
                 
-                    <div class=" flex-none w-10  m-auto pr-3 font-semibold text-md">
+                    <div class=" flex-none  m-auto mr-3 font-normal text-sm md:text-base">
                         <span>{{ orderdetail.orderdetails_quantity }}x</span>
                     </div>
                     <div  v-for="menufilter in menufilter(orderdetail.menu_id)" class="pr-3 flex-1 m-auto" >
                         <div  class=" flex-auto m-auto">
-                            <span class="font-semibold text-md"> {{menufilter.product_name}}</span>
+                            <span class="font-semibold text-sm md:text-base"> {{menufilter.product_name}}</span>
                     
                         </div>
                     </div>
-                    <div class="cursor-pointer flex-none m-auto text-base font-light">
+                    <div class="cursor-pointer flex-none m-auto text-sm md:text-base font-light">
                             {{ $filters.formattedCurrency(orderdetail.orderdetails_totalprice) }}
                     </div>
                     
                 </div>
             </div>
-            <div class="px-6 border-t border-gray-100">
-                <div  class="pt-6 pb-1 flex text-sm ">
-                    <div class="flex-1">Sub Total <span class="text-sm font-extralight">(Tax inclusive)</span></div>
+            <div class="px-4 py-6 border-t border-gray-100  dark:border-gray-500/30">
+                <div  class="pb-1 flex text-xs md:text-sm">
+                    <div class="flex-1 font-normal">Sub Total <span class=" font-extralight">(Tax inclusive)</span></div>
                     <div class="flex-none font-light"> {{ $filters.formattedCurrency(orders.TotalAmount)}}</div>
                 </div>
-                <div  class="pb-6 flex ">
-                    <div class="flex-1 text-green-600 text-lg">Total</div>
-                    <div class="flex-none text-green-600 text-lg"> {{ $filters.formattedCurrency(orders.TotalAmount)}}</div>
+                <div  class="pb-6 flex text-lg md:text-xl font-medium">
+                    <div class="flex-1 text-green-600 ">Total</div>
+                    <div class="flex-none text-green-600 "> {{ $filters.formattedCurrency(orders.TotalAmount)}}</div>
                 </div>
                 <Link :href="route('menu.index')">
                     <div class="h-10  bg-green-600 rounded-sm flex justify-center cursor-pointer" > 
@@ -63,14 +64,14 @@
                     </div>
                 </Link>
             </div>
-            <div class=" p-4 bg-gray-50 text-center rounded-b-lg">
-                    <span class="block text-2xl text-gray-600">
+            <div class=" p-4 bg-gray-50 dark:bg-black/20 border-t  border-gray-100 dark:border-gray-500/30 text-center rounded-b-lg text-xl md:text-2xl">
+                    <span class="block  text-gray-600">
                         <!-- <i class="fas fa-star"></i> -->
                         <font-awesome-icon icon="fa-solid fa-star" /> 
                         Cups to self collect at the bar counter. 
                         <font-awesome-icon icon="fa-solid fa-star" /> 
                     </span>
-                    <span class="block text-2xl text-gray-600">
+                    <span class="block  text-gray-600">
                         <!-- <i class="fas fa-star"></i> -->
                         <font-awesome-icon icon="fa-solid fa-star" /> 
                         Plain water is free.
@@ -80,13 +81,9 @@
         </div>
         
     </div>   
-    
-
-
-
-
+</div>
  
-  </template>
+</template>
   
 <script setup>
 import moment from 'moment';
@@ -115,7 +112,7 @@ export default {
     },
   
     mounted() {
-        document.body.style.backgroundColor = 'rgb(245 247 245)';
+        // document.body.style.backgroundColor = 'rgb(245 247 245)';
         console.log(this.orderdetails);
 
     },

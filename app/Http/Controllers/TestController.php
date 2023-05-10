@@ -343,7 +343,8 @@ class TestController extends Controller
             );
         } else {
             return inertia(
-                'Index/Checkout',
+                // 'Index/Checkout',
+                'Index/test1',
                 [
                     'cart' =>  $cart,
                 ],

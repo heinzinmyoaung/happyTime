@@ -8,7 +8,7 @@
     @inertiaHead
 </head>
 
-<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-300 overflow-x-hidden">
+<body class="bg-white  dark:bg-gray-800 text-gray-900 dark:text-gray-50 overflow-x-hidden">
     @inertia
 
 </body>

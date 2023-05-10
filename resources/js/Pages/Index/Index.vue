@@ -1,80 +1,56 @@
 
 <template >
-
-<nav>
+<NavigationBar :cartSlidebar="cartSlidebar" @myevent1 ="searchAction" @myevent2 ="CartSlideFun" :totalprice = "total()" :cartcount = "cartcount()"/>
+<!-- <nav>
+    
     <ul>
       <li v-for="(category, index) in categoriesfilter" :key="category.id" class=" relative" :class="{  'text-red-500' : index === activeIndex}" >
         <a @click="scrollToElement(category.id)" class=" cursor-pointer">{{ category.category_name }}</a>
       </li>
     </ul>
-  </nav>
-    <div>
+  </nav> -->
+    <!-- <div>
      <input type="text" v-model="query" @input="search" class=" border border-gray-300 rounded-lg" />
-     <!-- <ul>
-       <li>
-         {{ result.name }} - {{ result.email }}
-         ssssss
-       </li>
-     </ul> -->
-   </div>
-     <button class=" h-20 w-14 bg-gray-900" @click="test(1)">sldjlsjl</button>
+   </div> -->
+  
  <!-- kjllhnlsdnklndsklcnlksdnlskndlksdnckl -->
- <button @click=" shoppingCart,aa(cartSlidebar),cartSlidebar = !cartSlidebar"  class=" text-red-500 w-20 h-30 border border-r-neutral-800">Cart {{ cartSlidebar }} {{ showSidebar }} </button>
+ <!-- <button @click=" shoppingCart,aa(cartSlidebar),cartSlidebar = !cartSlidebar"  class=" text-red-500 w-20 h-30 border border-r-neutral-800">Cart {{ cartSlidebar }} {{ showSidebar }} {{cartcount()}}</button>
  <div v-for="carts in cart">cartSlidebar
      {{ carts }}
- </div>
- <Show :menus="menus"/>
- <!-- <div>sfsfsf{{ array }}</div> -->
- <!-- <div>{{ session('cart') }}</div> -->
- <div  class=" text-lg text-blue-600 font-bold" ref="one">
-     {{ message }}
- </div>
- <div>Checked additionalid: {{ additionalarray }}</div>
- <div>Checked additionalid: {{ shoppingcartindex }}</div>
- <!-- <div>Checked additionalnames: {{ additionalname }}</div>-->
- <div>Checked names: {{ price, categoriesfilter}}</div> 
- <!-- <div>Checked names: {{ subtotal }}</div> -->
- 
- <div >
-     <h3>All</h3>
-     <!-- <button @click="scrollToElement">Scroll to {{targetId}}</button> -->
-     <div v-for="category in categories" :key="category.id">
-         <button @click="scrollToElement(category.id)">{{ category.category_name }}</button>
-     </div>
- 
- </div>
- 
+ </div> -->
+
  
  
  <!-- ///////Start => Filter menu data by Category -->
  <!-- :class="{ '-translate-x-full' : showSidebar}" @click="showSidebar = !showSidebar" -->
  <!-- <div > -->
-     <EmptySearch v-if="categoriesfilter.length <= 0"/>
-     <div v-else v-for="category in categoriesfilter" :key="category.id" :id="category.id" class=" relative h-full" >
-         <span>{{ category.category_name }}</span>
-         <div class="container m-auto p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 relative ">
+    <EmptySearch v-if="categoriesfilter.length <= 0"/>
+    <div v-else class=" bg-gray-50  dark:bg-gray-800">
+     <div  v-for="category in categoriesfilter" :key="category.id" :id="category.id" class="container m-auto px-4 py-2 relative" >
+         <span class=" font-medium text-lg md:text-2xl ">{{ category.category_name }}</span>
+         <div class=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-6 gap-4 py-4 md:py-8 relative cursor-pointer">
          
             <div v-for="menu in menufilter(category.id)" :key="menu.id">  <!-- to given the parameter in menufilter=>located (export default=>methods) -->
-                 <div class="bg-white dark:bg-gray-800 rounded-md px-2 py-2 ring-1 ring-slate-900/5 shadow-md">
+                 <div class="bg-white dark:bg-gray-800 rounded-md px-2 py-2 ring-1 ring-slate-900/5 shadow-md border dark:border-gray-400/60 hover:border-green-500 hover:dark:border-green-800">
                      <div>
                          <a @click="showDetail(menu.id),aa(showSidebar),addonfilter(menu.id),showSidebar = !showSidebar, fakekeid = menu.id" >
-                             <img :src="`./images/${ menu.product_image }`">
+                             <img :src="`./images/${ menu.product_image }`" >
                          </a>
                      </div>
      
-                     <h3 class="text-slate-700 dark:text-white mt-2 text-base tracking-tight">{{ menu.product_name }}</h3>
-                     <p class="text-slate-500 dark:text-slate-400 text-xs">{{ menu.product_description }}</p>
+                     <h3 class=" mt-2 text-sm md:text-base tracking-tight truncate" >{{ menu.product_name }}</h3>
+                     <p class="text-gray-500 dark:text-gray-300 text-xs ">{{ menu.product_description }}</p>
      
-                     <div class="flex justify-between mt-6">
-                         <p class="inline-block text-green-500">{{ $filters.formattedCurrency(menu.product_price) }}</p>
+                     <div class="flex justify-between mt-3 lg:mt-5 text-sm md:text-base lg:text-lg  text-green-500">
+                         <p class="inline-block">{{ $filters.formattedCurrency(menu.product_price) }}</p>
      
                          <button>sdd</button>
                      </div>
-                 </div>
-               
-         </div>
+                 </div>  
+            </div>
          </div>
      </div>
+    </div>
  <!-- </div> -->
  <!-- ///////End => Filter menu data by Category -->
  
@@ -106,43 +82,46 @@
  
  
  <!-- ------ product Detail Slidebar -->
- <div  class='w-full h-full bg-gray-600/50 fixed z-40 top-0 overflow-x-hidden overflow-y-auto '  :class="{ 'translate-x-full' : showSidebar}" @click="aa(showSidebar),showSidebar = !showSidebar">
+ <div  class='w-full h-full bg-gray-600/50 fixed z-50 top-0 overflow-x-hidden overflow-y-auto '  :class="{ 'translate-x-full' : showSidebar}" @click="aa(showSidebar),showSidebar = !showSidebar">
  </div>
- <div  class=" bg-white w-full h-full md:w-2/3 lg:w-2/4 xl:w-2/5 right-0 z-50 fixed float-right top-0  transform translate-x-0 transition duration-500 ease-in-out" :class="{ ' translate-x-full' : showSidebar}" >    
-             <div class=" border-b  border-gray-200/70 w-full h-10 lg:h-16 bg-white">     
-                 <button @click="aa(showSidebar), showSidebar = !showSidebar" as="button">+++ Timer</button>
-                 <div>{{ showSidebar }}</div>
-             </div>
-         <div id= "showSidebar" class="overflow-y-auto top-16 w-full  h-full pb-40 right-0 absolute  " >
-             <div class="grid grid-cols-4 p-6 bg-white">
-                 <div id="imgDiv" class="pr-6">
-                     <img id="imgUpload" src="" ref="image" alt="" class="rounded-md ">
+ <div  class=" bg-white  dark:bg-gray-800 w-full h-full md:w-2/3 lg:w-2/4 xl:w-2/5 right-0 z-50 fixed float-right top-0  transform translate-x-0 transition duration-500 ease-in-out" :class="{ ' translate-x-full' : showSidebar}" >    
+        <div class=" absolute flex text-center px-4 top-0 z-20 border-b border-gray-200/70 bg-white  dark:bg-gray-800 dark:border-black/20 w-full h-12 lg:h-16 text-base md:text-lg text-green-500">     
+            <span class="flex-1 justify-center m-auto">Select Modifiers</span>
+            <button @click="aa(showSidebar), showSidebar = !showSidebar" as="button" class="flex-none m-auto float-right right-0 "> 
+                    <font-awesome-icon icon="fa-solid fa-xmark" />
+            </button>
+        </div>
+         <div id= "showSidebar" class="overflow-y-auto top-11 lg:top-14 w-full  h-full pb-40 right-0 absolute  " >
+            
+             <div class="flex p-4 font-semibold text-sm md:text-base">
+                 <div id="imgDiv" class="flex-none pr-4">
+                     <img id="imgUpload" src="" ref="image" alt="" class="rounded-md w-16 h-16 md:w-24 md:h-24 ">
                  </div>
-                 <div ref="name" class="col-span-2 font-semibold text-lg "></div>
-                 <div ref="price" class=" font-semibold text-lg flex justify-end"></div>
+                <div ref="name" class="flex-1 "></div>
+                <div ref="price" class="flex-none"></div> 
              </div>
              
-             <div v-for="addon in addonfilter(clickfoodid)" :key="addon.id" class="p-6 bg-white my-2">
-                 <span class=" text-lg font-bold text-red-600">Add On {{ addon.addon_name}}</span>
+             <div v-for="addon in addonfilter(clickfoodid)" :key="addon.id" class="p-4 border-t-4 border-gray-100 dark:border-black/20">
+                 <span class="font-bold text-red-600/90 dark:text-red-700/95 text-sm md:text-base">Add On {{ addon.addon_name}}</span>
                  <div v-for="addondetail in addondetails" :key="addondetail.id">
-                     <div v-if="addondetail.addon_id == addon.id" class= " py-4 border-b border-gray-200/70">
-                         <input type="checkbox" class=" h-6 w-6 align-middle" :id="addondetail.id" v-model="additionalarray" :value="addondetail.id" >
-                         <span class=" pl-4 align-middle">{{ addondetail.addondetail_name }}</span>
+                     <div v-if="addondetail.addon_id == addon.id" class= " py-4 border-b border-gray-200/70 dark:border-gray-500/30 text-gray-600 dark:text-gray-300">
+                         <input type="checkbox" class=" h-5 w-5 md:h-6 md:w-6  align-middle" :id="addondetail.id" v-model="additionalarray" :value="addondetail.id" >
+                         <span class=" pl-4 align-middle text-xs md:text-sm ">{{ addondetail.addondetail_name }}</span>
                         
                          <span class="float-right">{{ $filters.formattedCurrency(addondetail.addondetail_price) }}</span>
                      </div>
                  </div>
              </div>
          </div>
- 
-         <div class=" w-full h-24 bg-white z-20 absolute bottom-0 border-t border-gray-200  shadow-inner shadow-gray-200/50 grid grid-cols-3 p-4">
-             <div class=" flex flex-row justify-around mr-4 py-3 pl-2">
-                 <button class="w-11 rounded-md border border-gray-300 shadow-sm" @click="addoneplus">+</button> 
-                 <p ref="p" class="m-auto">{{addplus}}</p>
-                 <button class="w-11 rounded-md border border-gray-300 shadow-sm" @click="addoneminus">-</button> 
+
+         <div class=" w-full h-20 md:h-24  z-20 absolute bottom-0 border-t bg-inherit border-gray-200  dark:border-black/20 shadow-inner flex p-4">
+             <div class="flex flex-row w-32 my-auto pr-4 md:pr-6 ">
+                 <button class=" w-7 h-7 md:w-10 md:h-10 rounded-md border border-gray-300 shadow-sm" @click=" addoneplus">+</button> 
+                 <p ref="p" class=" w-8 md:w-11 text-center my-auto">{{addplus}}</p>
+                 <button class="w-7 h-7 md:w-10 md:h-10 rounded-md border border-gray-300 shadow-sm" @click="addoneminus">-</button> 
  
              </div>
-             <div class=" col-span-2 ml-4 p-2">
+             <div class="flex-auto w-full h-10 md:h-12 my-auto font-normal text-sm md:text-base">
                  <button class="w-full h-full bg-green-600 rounded-md" @click="menucart(),aa(showSidebar),showSidebar = !showSidebar">Add to basket {{  $filters.formattedCurrency((basedprice+additionprice)*addplus)}}</button>
              </div> 
          </div>
@@ -155,66 +134,68 @@
  <EmptyCart :cartSlidebar="cartSlidebar" v-if="!cart" @myevent="myAction()" />
  <!-- ------ Shopping cart Detail Slidebar --> 
  <div v-else>
- <div  class='w-full h-full bg-gray-600/50 fixed z-10  top-0 overflow-x-hidden overflow-y-auto '  :class="{ 'translate-x-full' : cartSlidebar}" @click="aa(cartSlidebar),cartSlidebar = !cartSlidebar">
+ <div  class='w-full h-full bg-gray-600/50 fixed z-40  top-0 overflow-x-hidden overflow-y-auto '  :class="{ 'translate-x-full' : cartSlidebar}" @click="aa(cartSlidebar),cartSlidebar = !cartSlidebar">
  </div>
-    <div  class=" bg-white w-full md:w-2/3 lg:w-2/4 xl:w-2/5 h-full right-0  z-10 fixed top-0 float-right   transform translate-x-0 transition duration-500 ease-in-out" :class="{ ' translate-x-full' : cartSlidebar}" >
-   
-         <div class=" absolute top-0 z-20 border-b border-gray-200/70 w-full h-10 lg:h-16 bg-white">     
-             <button @click="aa(cartSlidebar), cartSlidebar = !cartSlidebar" as="button">+++ Timer</button>
-             <div>{{ cartSlidebar }}</div>
-         </div>
+    <div  class=" container m-auto bg-white dark:bg-gray-800 w-full md:w-2/3 lg:w-2/4 xl:w-2/5 h-full right-0  z-40 fixed top-0 float-right   transform translate-x-0 transition duration-500 ease-in-out" :class="{ ' translate-x-full' : cartSlidebar}" >
+        <div class=" absolute flex text-center px-4 top-0 z-20 border-b border-gray-200/70  dark:border-black/20 w-full h-12 lg:h-16 text-base md:text-lg text-green-500">     
+            <span class="flex-1 justify-center m-auto">Shopping Cart</span>
+            <button @click="aa(cartSlidebar), cartSlidebar = !cartSlidebar" as="button" class="flex-none m-auto float-right right-0 "> 
+                    <font-awesome-icon icon="fa-solid fa-xmark" />
+            </button>
+        </div>
  
-         <div id= "cartslidebar" class="overflow-y-auto top-10 lg:top-16   w-full  h-full right-0 absolute" >   
-             <div class=" overflow-y-auto pb-48 lg:pb-52">
-             <div v-for="(carts,index) in cart" :key="carts.foodid" class=" flex p-6 bg-white  ">
+         <div id= "cartslidebar" class="overflow-y-auto top-12 lg:top-16 w-full h-full right-0 absolute " >   
+             <div class=" overflow-y-auto pb-48 lg:pb-52 ">
+             <div v-for="(carts,index) in cart" :key="carts.foodid" class=" flex px-4 pb-4 pt-4">
                  <!-- <div v-for="cartfood in cartfood(carts.foodid)" :key="cartfood.id" class="flex" > -->
                      <div  class="flex flex-row flex-none  align-content-center pr-3">
-                         <button class=" text-cyan-500 text-lg" @click="minus(index,carts.quantity,carts.foodprice,carts.additionprice, carts.totalprice)">-</button> 
-                         <div :key="carts.foodid" class="my-auto mx-2 text-sm w-6 text-center" ref="qty">{{ quantity(carts.quantity)}}</div>
-                         <button class="text-cyan-500 text-lg" @click="add(index,carts.foodprice, carts.additionprice,carts.totalprice)">+</button> 
+                         <button class=" text-cyan-500 text-base md:text-lg" @click="minus(index,carts.quantity,carts.foodprice,carts.additionprice, carts.totalprice)">-</button> 
+                         <div :key="carts.foodid" class="mx-1 text-sm w-6 md:w-11 text-center my-auto" ref="qty">{{ quantity(carts.quantity)}}</div>
+                         <button class="text-cyan-500 text-base md:text-lg" @click="add(index,carts.foodprice, carts.additionprice,carts.totalprice)">+</button> 
                      </div>
  
                  
-                     <div  class="pr-3 flex-none m-auto" @click=" shoppingcartindexasign(index,carts.quantity), showDetail(carts.foodid), showSidebar = !showSidebar, additionalarray = carts.additionalarray">
-                         <img  :src= "`./images/${carts.foodimage}`"  alt="" class="w-20 h-20 rounded-md" >
+                     <div  class="pr-3 flex-none m-auto hidden md:block" @click=" shoppingcartindexasign(index,carts.quantity), showDetail(carts.foodid), showSidebar = !showSidebar, additionalarray = carts.additionalarray" >
+                         <img  :src= "`./images/${carts.foodimage}`"  alt="" class="w-16 h-16 md:w-20 md:h-20 rounded-md" >
                      </div>
  
-                     <div  class=" flex-auto ">
-                         <span class="font-semibold text-md">{{ carts.foodname }}</span>
-                         <p v-for="additionalnames in carts.additionalname"  class="text-xs">
+                     <div  class=" flex-auto text-sm md:text-base" @click=" shoppingcartindexasign(index,carts.quantity), showDetail(carts.foodid), showSidebar = !showSidebar, additionalarray = carts.additionalarray" >
+                         <span class="font-semibold">{{ carts.foodname }}</span>
+                         <p v-for="additionalnames in carts.additionalname"  class="text-xs text-gray-600 dark:text-gray-300">
                              {{ additionalnames }}
                          </p>
                      </div>
-                     <div  v-if="carts.quantity == 0" @click="remove(index)" class="cursor-pointer flex-none text-base font-bold text-red-600">
-                         remove
-                     </div>
-                     <div v-else  class=" flex-none text-base">
-                         {{  $filters.formattedCurrency(carts.totalprice) }}
-                     </div>
-                         
+                    <div  v-if="carts.quantity == 0" @click="remove(index)" class="cursor-pointer flex-none text-sm md:text-base font-bold text-red-600">
+                        remove
+                    </div>
+                    <div v-else  class=" flex-none text-sm md:text-base">
+                        {{  $filters.formattedCurrency(carts.totalprice) }}
+                    </div>
                  <!-- </div> -->
              </div>
              
-                 <div  class="p-6 flex border-t border-gray-200/70">
+                 <div  class="p-4 flex border-t border-gray-200/70 dark:border-gray-500/30 text-sm md:text-base">
                      <div class="flex-1">Subtotal</div>
                      <div class="flex-none">{{  $filters.formattedCurrency(total()) }}</div>
                  </div>
              
              </div>
          </div>
-        <div class="h-36 w-full px-6 bg-white z-20 absolute bottom-0  border-t border-gray-200/70  shadow-inner shadow-gray-200/50 ">
-             <div class="text-xl py-5 font-medium flex">
-                 <p class="flex flex-1">Total</p>
-                 <p>{{  $filters.formattedCurrency(total()) }}</p>
-             </div>
-       
-             <Link :href="route('menu.checkout')">
-             <div class=" h-12 bg-green-600 rounded-md flex justify-center" @click="orderdetail = !orderdetail ,cartSlidebar = !cartSlidebar ">
-                 <button class="align-middle bg-green-600 rounded-md" >Confirm </button>
-             </div>
-         </Link>
-            
-         </div>
+        <div class=" p-4 h-20 md:h-28 lg:h-32 w-full z-20 absolute bottom-0 flex border-t bg-inherit border-gray-200  dark:border-black/20 shadow-inner">
+            <div class=" flex-none flex-row my-auto">
+                <div class=" text-base md:text-lg  font-medium pr-6">
+                    <p class=" font-normal ">Total</p>
+                    <p>{{  $filters.formattedCurrency(total()) }}</p>
+                </div>
+            </div>
+
+            <Link :href="route('menu.checkout')" class="flex flex-1"> 
+                <div class=" h-9 md:h-12  bg-green-600 rounded-md flex flex-1 my-auto justify-center text-center" @click="orderdetail = !orderdetail ,cartSlidebar = !cartSlidebar ">
+                    <button class="align-middle bg-green-600 rounded-md text-sm md:text-base" >Confirm</button>  
+                </div>
+            </Link>
+        
+        </div>
      </div>
  
  </div>
@@ -232,7 +213,7 @@
  import EmptyCart from './EmptyCart.vue'
  import Checkout from './Checkout.vue';
  import EmptySearch from './EmptySearch.vue'
- 
+ import NavigationBar from './NavigationBar.vue';
 //   const a= defineProps({
 //      menus: Object,
 //      categories: Object,
@@ -327,7 +308,7 @@
      setup() {
          return {     
          orderdetail,
-         showSidebar: true,
+        //  showSidebar: true,
         //  addondetails: Object,
          agrement: false,
          
@@ -349,7 +330,9 @@
          // additionalname: []
          timeoutId: null,
          query: '',
-         activeIndex: -1
+         activeIndex: -1,
+         myValue:null,
+        //  windowHeight: window.innerHeight
          // cid: []
          
          };
@@ -414,6 +397,7 @@
                  
                      const b =  a.filter(el=> el.product_name.toLowerCase().trim().includes( this.query.toLowerCase().trim()))
                  //    this.cid= b.map(el=>el.category_id)
+                 console.log(b);
                      return b;
                     
                  }else{
@@ -431,13 +415,18 @@
              const body = document.body;
              // const slidebar = document.getElementById('slidebar')
              // const cartslidebar = document.getElementById('cartslidebar')
+            //  alert(showSidebar.value)
              if(para){
-                 // slidebar.style.overflow = 'auto';
-                 // cartslidebar.style.overflow = 'auto';
+                //  slidebar.style.overflow = 'auto';
+                //  cartslidebar.style.overflow = 'auto';
                  body.style.overflow='hidden';
                  
-             }else{
-                 body.style.overflowY='auto';
+             }else if( showSidebar.value == false && cartSlidebar.value == false){
+                body.style.overflow='hidden';
+
+             }
+             else{
+                body.style.overflowY='auto';
                  this.additionalarray = [];
                  this.shoppingcartindex = null;
                  this.addplus = 1;
@@ -565,6 +554,16 @@
              // console.log(this.filterprice)
              return totalPrice
         },
+        cartcount(){
+            if(this.cart){
+                    const quantityarray= this.cart.map( (el) => el.quantity)
+                    const count = quantityarray.reduce((count, storecount)=> count + storecount)
+                    return count
+
+                 }else{
+                     return 0
+                 }
+        },
         
         handleScroll(){
             const scrollY = window.scrollY; // get the current scroll Y position
@@ -578,12 +577,32 @@
 
             }
            
+        },
+        onForwardNavigation() {
+            this.showSidebar = true
+        },
+        searchAction(myValue){
+            // this.myValue = value
+
+            this.query = myValue
+        },
+        CartSlideFun(cartslidebar){
+            cartSlidebar.value = cartslidebar
+            // console.log(cartslidebar)
         }
         
     },
-        
+     
+    // unmounted: function(){
+    //     orderdetail = true
+    //      showSidebar= true
+    // },
     mounted: function(){
       
+        window.onpopstate = () => {  // if you click he browser defaullt back and forward button, run this  
+            showSidebar.value = true;
+            cartSlidebar.value = true;
+        };
          document.getElementById("app").removeAttribute('data-page'); // delete data-page attribute in console
        
     window.addEventListener('scroll', this.handleScroll); // scroll and run the handScroll function
