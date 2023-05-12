@@ -30,21 +30,21 @@
             </div>
             <div class=" flex-1 px-4 hidden" ref="searchfield">
                 <span class="flex flex-row items-center">
-                    <span class=" bg-gray-200/60 pl-2 md:pl-4 h-9 md:h-10 rounded-l-lg flex items-center" >
+                    <span class=" bg-gray-200/60 px-2 md:px-4 h-9 md:h-10 rounded-l-lg flex items-center" >
                         <font-awesome-icon :icon="['fas', 'magnifying-glass']" class=" text-xs md:text-sm" />
                     </span>
                     <input type="text" v-model="query" @input="search" ref="inputField" @click="searchCall" @blur="onSearchBarBlur" class=" w-full h-9 md:h-10 bg-gray-200/60 rounded-r-lg p-2 outline-0 text-xs md:text-base" placeholder="search"  />
                 </span>
             </div>
             <div class=" flex flex-row items-center text-sm md:text-base ">
-                <div v-if=" search"  class=" pr-5 md:pr-6  " @click="searchbar" >
+                <div v-if=" search"  class="md:pr-6  " @click="searchbar" >
                     <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
                 </div>
-                <span v-else class=" pr-5 md:pr-6 " @click="searchclear">
+                <span v-else class=" md:pr-6 " @click="searchclear">
                     <font-awesome-icon icon="fa-solid fa-xmark" />
                 </span>
                 <div class=" flex-none relative hidden md:inline-block border bg-green-600   rounded-md text-xs md:text-base font-medium" :class="{ ' bg-transparent' : totalprice === 0}" @click="ClickCart">
-                    <div class=" flex justify-center items-center h-10 px-4">
+                    <div class=" flex justify-center items-center px-4 h-10">
                         <div class=" px-1 bg-white ring-offset-2 ring-1 ring-green-600 absolute -translate-x-10 -translate-y-5 rounded-full flex justify-center items-center text-green-600 text-xs" :class="{ 'hidden' : cartcount === 0}">{{ cartcount }}</div>
                         <div class=" m-auto">
                             <span class="pr-1" :class="{ 'text-gray-500' : cartcount === 0}">
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="lg:pl-6 flex-none ">
+                <div class="pl-6 flex-none ">
                     <font-awesome-icon icon="fa-solid fa-globe" />
                 </div>
             </div>
@@ -90,7 +90,7 @@
     
 </div>
 
-<div class="md:hidden bg-white w-full h-16 fixed bottom-0  z-40  left-0 border-t border-gray-200  dark:border-black/20 shadow-inner p-4" @click="ClickCart" ref="confirmbtn">
+<div class="md:hidden bg-white w-full h-16 fixed bottom-0  z-40  left-0 border-t border-gray-200  dark:border-black/20 shadow-inner p-4" @click="ClickCart" ref="confirmbtn" :class="{'hidden':length === 0}">
         <div class=" flex flex-row  w-full h-full justify-between items-center bg-green-600 px-3 rounded text-white" :class="{ ' bg-gray-200/80 text-black/20' : totalprice === 0}">
             <div class=" bg-white rounded-sm px-1 flex justify-center items-center text-green-600 text-xs md:text-sm" :class="{ ' text-transparent' : totalprice === 0}">
                {{ cartcount }}
@@ -124,6 +124,7 @@ export default {
         totalprice: Number ,
         cartSlidebar: Boolean,
         cartcount: Number,
+        length: Number
         // windowHeight: Number
     },
     data(){
@@ -151,6 +152,16 @@ export default {
         },
         searchCall(){
             const myValue = this.query
+          
+            if(this.query !== null){
+                const windowHeight = window.innerHeight;
+                const bottonHeight = this.$refs.confirmbtn.offsetHeight
+                const test = windowHeight- bottonHeight
+                this.$refs.confirmbtn.style.bottom = 'unset'
+                this.$refs.confirmbtn.style.transform = `translateY(${test}px)`
+            }
+            
+
             this.$emit('myevent1', myValue)
             // console.log(this.query);
         },
@@ -159,18 +170,34 @@ export default {
             // alert('aa');
             this.$refs.searchfield.style.display = "inline-block"
             this.$refs.inputField.focus();
-            const buttonTop = this.$refs.confirmbtn.offsetTop;
-            this.$refs.confirmbtn.style.top = `${buttonTop}px`
+
+
+          const windowHeight = window.innerHeight;
+          const bottonHeight = this.$refs.confirmbtn.offsetHeight
+          const test = windowHeight- bottonHeight
+          this.$refs.confirmbtn.style.bottom = 'unset'
+          this.$refs.confirmbtn.style.transform = `translateY(${test}px)`
+            // const buttonTop = this.$refs.confirmbtn.offsetTop;
+            // this.$refs.confirmbtn.style.top = `${buttonTop}px`
    
         },
         searchclear(){
             this.query = null
-            this.$refs.confirmbtn.style.top = 'unset'
+            // this.$refs.confirmbtn.style.top = 'unset'
+            this.$refs.confirmbtn.style.transform = `unset`
+            
+            this.$refs.confirmbtn.style.bottom = '0px'
+            // this.$refs.confirmbtn.style.transform = `unset`
+
             this.$refs.searchfield.style.display = "none"
             search.value = !search.value;
         },
         onSearchBarBlur(){
-            this.$refs.confirmbtn.style.top = 'unset'
+            this.$refs.confirmbtn.style.bottom = '0px'
+          this.$refs.confirmbtn.style.transform = `unset`
+            // this.$refs.confirmbtn.style.bottom = '0px'
+
+            // this.$refs.confirmbtn.style.top = 'unset'
 
         },
         aa(para){

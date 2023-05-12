@@ -29,6 +29,9 @@ Route::get('/', [TestController::class, 'index'])
 Route::post('/', [TestController::class, 'store'])
     ->name('menu.store');
 
+Route::get('/getdata', [TestController::class, 'getdata'])
+    ->name('menu.getdata');
+
 Route::post('/update', [TestController::class, 'update'])
     ->name('menu.update');
 

@@ -20,11 +20,6 @@ class TestController extends Controller
     public function index()
     {
 
-        // dd(Auth::user());
-
-        // $allSessions = session()->all();
-        // dd($allSessions);
-
         return inertia(
             'Index/Index',
             [
@@ -35,14 +30,20 @@ class TestController extends Controller
                 'addons' => Addon::all(),
                 'addondetails' => Addondetail::all(),
                 'orders' => Order::all(),
-                'orderdetails' => Orderdetail::all()
+                'orderdetails' => Orderdetail::all(),
             ],
-
         );
     }
 
+    public function getdata()
+    {
+
+        $data = session()->get('cart');
+        return response()->json($data);
+    }
     public function store(Request $request)
     {
+
         // $request->session()->flush();
         // $cart = session()->get('cart');
         // $id = $request->foodid;
@@ -70,7 +71,6 @@ class TestController extends Controller
 
 
         $cart = session()->get('cart'); // cart session 
-
         // Sorting and  Change the Collection array to Normal Array
         $additionalArray = collect($request->additionalarray)->sort()->values()->toArray(); //$request->addditionalarray is normal array.'collect()' so change the collection array and 'sort(),values()' sorting value and index and then 'reverse()' reverse to normalArray
 
@@ -227,6 +227,7 @@ class TestController extends Controller
                             $cart = $cart->replaceRecursive([$foodcartindex => ['additionalname' => $additionalName]]);
                             $cart = $cart->replaceRecursive([$foodcartindex => ['totalprice' => $aftertotalprice]]);
                             $request->session()->put('cart', $cart->values());
+
                             return redirect()->back();
                         }
                     }
@@ -263,7 +264,6 @@ class TestController extends Controller
         // $request->session()->regenerate();
         // $request->session()->invalidate();
         $request->session()->regenerate();
-
         return redirect()->back();
 
         // session(['cart' => $request->session('cart')->all()]);
@@ -272,8 +272,11 @@ class TestController extends Controller
 
     public function update(Request $request)
     {
+        // dd(collect($request->cart));
         $request->session()->put('cart', collect($request->cart));
-        return redirect()->back();
+        $data = session()->get('cart');
+        return response()->json($data);
+        // return redirect()->back();
     }
 
     public function remove(Request $request)
@@ -290,7 +293,6 @@ class TestController extends Controller
         } else {
             $request->session()->put('cart', $cart->values());
         }
-
         return redirect()->back();
     }
 
@@ -343,8 +345,8 @@ class TestController extends Controller
             );
         } else {
             return inertia(
-                // 'Index/Checkout',
-                'Index/test1',
+                'Index/Checkout',
+                // 'Index/test1',
                 [
                     'cart' =>  $cart,
                 ],

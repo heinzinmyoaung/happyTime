@@ -1,6 +1,6 @@
 
 <template >
-<NavigationBar :cartSlidebar="cartSlidebar" @myevent1 ="searchAction" @myevent2 ="CartSlideFun" :totalprice = "total()" :cartcount = "cartcount()"/>
+<NavigationBar :length="categoriesfilter.length" :cartSlidebar="cartSlidebar" @myevent1 ="searchAction" @myevent2 ="CartSlideFun" :totalprice = "total()" :cartcount = "cartcount()"/>
 <!-- <nav>
     
     <ul>
@@ -19,7 +19,7 @@
      {{ carts }}
  </div> -->
 
- 
+ <div>{{ cart.count }}</div>
  
  <!-- ///////Start => Filter menu data by Category -->
  <!-- :class="{ '-translate-x-full' : showSidebar}" @click="showSidebar = !showSidebar" -->
@@ -31,7 +31,8 @@
          <div class=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-6 gap-4 py-4 md:py-8 relative cursor-pointer">
          
             <div v-for="menu in menufilter(category.id)" :key="menu.id">  <!-- to given the parameter in menufilter=>located (export default=>methods) -->
-                 <div class="bg-white dark:bg-gray-800 rounded-md px-2 py-2 ring-1 ring-slate-900/5 shadow-md border dark:border-gray-400/60 hover:border-green-500 hover:dark:border-green-800">
+                 <Loadingpage v-if="isLoading" />
+                <div v-else class="bg-white dark:bg-gray-800 rounded-md px-2 py-2 ring-1 ring-slate-900/5 shadow-md border dark:border-gray-400/60 hover:border-green-500 hover:dark:border-green-800">
                      <div>
                          <a @click="showDetail(menu.id),aa(showSidebar),addonfilter(menu.id),showSidebar = !showSidebar, fakekeid = menu.id" >
                              <img :src="`./images/${ menu.product_image }`" >
@@ -47,6 +48,7 @@
                          <button>sdd</button>
                      </div>
                  </div>  
+                
             </div>
          </div>
      </div>
@@ -131,7 +133,7 @@
  <!-- -------------- -->
  
  <!-- <Checkout :orders="orders" :orderdetails="orderdetails" /> //v-if="0" -->
- <EmptyCart :cartSlidebar="cartSlidebar" v-if="!cart" @myevent="myAction()" />
+ <EmptyCart :cartSlidebar="cartSlidebar" v-if="!cart.length" @myevent="myAction()" />
  <!-- ------ Shopping cart Detail Slidebar --> 
  <div v-else>
  <div  class='w-full h-full bg-gray-600/50 fixed z-40  top-0 overflow-x-hidden overflow-y-auto '  :class="{ 'translate-x-full' : cartSlidebar}" @click="aa(cartSlidebar),cartSlidebar = !cartSlidebar">
@@ -214,6 +216,7 @@
  import Checkout from './Checkout.vue';
  import EmptySearch from './EmptySearch.vue'
  import NavigationBar from './NavigationBar.vue';
+ import Loadingpage from './Loadingpage.vue'
 //   const a= defineProps({
 //      menus: Object,
 //      categories: Object,
@@ -270,6 +273,7 @@
  
  import { useForm, Link } from '@inertiajs/vue3';
  import { ref } from 'vue';
+ import axios from 'axios';
  
  
  
@@ -300,7 +304,7 @@
      foodaddons: Object,
      addons: Object,
      addondetails: Object,
-     cart: Object,
+    //  cart: Object,
      orders: Object,
      orderdetails: Object,
   },
@@ -332,6 +336,8 @@
          query: '',
          activeIndex: -1,
          myValue:null,
+         cart: [],
+         isLoading: true,
         //  windowHeight: window.innerHeight
          // cid: []
          
@@ -354,7 +360,7 @@
 
             foodaddonid.forEach((name, index) => graduateStudent(name.id, index));
             // const object = new addonfilter(id);
-            console.log(nowGraduated)
+            // console.log(nowGraduated)
             return nowGraduated
  
  },
@@ -479,40 +485,87 @@
              }
          },
          
-         menucart(action){
-         // console.log(this.addplus,this.clickfoodid,this.shoppingcartindex, this.additionalarray)
+        //  menucart(action){
+
+        
+        //  // console.log(this.addplus,this.clickfoodid,this.shoppingcartindex, this.additionalarray)
          
-         const cartarray= useForm(
+        //  const cartarray= useForm(
              
-             {
-                 'index' : this.shoppingcartindex,
-                 'foodid': this.clickfoodid,
-                 'action': action,
-                 // 'foodname': tocart.product_name,
-                 // 'foodimage': tocart.product_image,
-                 // 'foodprice': tocart.product_price,
-                 // 'additionprice': this.additionprice,
-                 'quantity': this.addplus,
-                 'additionalarray': this.additionalarray,
-                 // 'additionalname': this.additionalname
-             }
+        //      {
+        //          'index' : this.shoppingcartindex,
+        //          'foodid': this.clickfoodid,
+        //          'action': action,
+        //          // 'foodname': tocart.product_name,
+        //          // 'foodimage': tocart.product_image,
+        //          // 'foodprice': tocart.product_price,
+        //          // 'additionprice': this.additionprice,
+        //          'quantity': this.addplus,
+        //          'additionalarray': this.additionalarray,
+        //          // 'additionalname': this.additionalname
+        //      }
          
-         );
+        //  );
          
-         this.additionprice = 0
-         this.additionalarray = []
-         this.addplus = 1
-         this.shoppingcartindex= null
+        //  this.additionprice = 0
+        //  this.additionalarray = []
+        //  this.addplus = 1
+        //  this.shoppingcartindex= null
  
-         return cartarray.post(route('menu.store'));
-         },
+        //  return cartarray.post(route('menu.store'));
+        //  },
+        pageload(){
+            
+            this.isLoading = true;
+            axios.post(route('menu.update'), {
+                'cart' : JSON.parse(localStorage.cart),
+            }).then(response => {
+                this.isLoading = false;
+                localStorage.removeItem('cart');
+                this.cart = response.data;
+            });
+            return cartarray.post(route('menu.update'));
+        },
+
+        loadData(){
+            axios.get(route('menu.getdata')).then(response => {
+                this.isLoading = false;
+                this.cart = response.data;
+            })
+            
+        },
+        menucart(action){
+          
+                // this.isLoading = true;
+                
+                axios.post(route('menu.store'), {
+                    'index' : this.shoppingcartindex,
+                    'foodid': this.clickfoodid,
+                    'action': action,
+                    'quantity': this.addplus,
+                    'additionalarray': this.additionalarray,
+                }).then (response => {  
+                    this.loadData();
+                    this.additionprice = 0
+                    this.additionalarray = []
+                    this.addplus = 1
+                    this.shoppingcartindex= null
+                  
+                    })
+                    
+            },
          remove(index){
-             const cartarray = useForm(
-                 {
-                     'index' : index,
-                 }
-             );
-             return cartarray.post(route('menu.remove'));
+            axios.post(route('menu.remove'),{
+                'index' : index,
+            }).then(response => {
+                this.loadData();
+            })
+            //  const cartarray = useForm(
+            //      {
+            //          'index' : index,
+            //      }
+            //  );
+            //  return cartarray.post(route('menu.remove'));
          },
          quantity(quantity){
              
@@ -520,34 +573,34 @@
          },
  
          add(index,foodprice,additionprice, totalprice){
-             
-             // console.log(this.cart);
-             if(index !== -1){
-                
-                 console.log(this.cart[index].quantity += 1)
-                 console.log(this.cart[index].totalprice = foodprice + additionprice + totalprice)
                  
-                 this.array =this.cart
-                 
-                 localStorage.setItem('cart', JSON.stringify(this.cart))
-                 console.log(JSON.parse(localStorage.cart));
- 
-             }
-           
-         },
-         minus(index,quantity,foodprice,additionprice, totalprice){
-             console.log(this.cart);
-             if(quantity > 0){
-                 console.log(this.cart[index].quantity -= 1)
-                 console.log(this.cart[index].totalprice =  totalprice- (foodprice + additionprice) )
-                 localStorage.setItem('cart', JSON.stringify(this.cart))
-                 console.log(JSON.parse(localStorage.cart));
- 
-                 if(this.cart[index].quantity  == 0){
-                     localStorage.removeItem('cart');
+                 // console.log(this.cart);
+                 if(index !== -1){
+                    
+                     console.log(this.cart[index].quantity += 1)
+                     console.log(this.cart[index].totalprice = foodprice + additionprice + totalprice)
+                     
+                     this.array =this.cart
+                     
+                     localStorage.setItem('cart', JSON.stringify(this.cart))
+                     console.log(JSON.parse(localStorage.cart));
+     
                  }
-             }
-         },
+               
+             },
+             minus(index,quantity,foodprice,additionprice, totalprice){
+                 console.log(this.cart);
+                 if(quantity > 0){
+                     console.log(this.cart[index].quantity -= 1)
+                     console.log(this.cart[index].totalprice =  totalprice- (foodprice + additionprice) )
+                     localStorage.setItem('cart', JSON.stringify(this.cart))
+                     console.log(JSON.parse(localStorage.cart));
+     
+                     if(this.cart[index].quantity  == 0){
+                         localStorage.removeItem('cart');
+                     }
+                 }
+             },
         total(){ 
              // return this.filterprice.reduce((total, item) => total + item, 0);
              let totalPrice = this.filterprice.length > 0 ? this.filterprice.reduce((total, item) => total + item, 0) : 0
@@ -555,10 +608,13 @@
              return totalPrice
         },
         cartcount(){
-            if(this.cart){
-                    const quantityarray= this.cart.map( (el) => el.quantity)
-                    const count = quantityarray.reduce((count, storecount)=> count + storecount)
-                    return count
+            // const quantityarray= this.cart.map( (el) => el.quantity)
+            // return this.cart.length > 0 ? quantityarray.reduce((count, storecount)=> count + storecount) : 0
+            // return count
+            if(this.cart.length > 0){
+                const quantityarray= this.cart.map( (el) => el.quantity)
+                const count = quantityarray.reduce((count, storecount)=> count + storecount,0)
+                return count
 
                  }else{
                      return 0
@@ -598,26 +654,34 @@
     //      showSidebar= true
     // },
     mounted: function(){
-      
+        console.log(this.cart)
+        // this.loadData();
         window.onpopstate = () => {  // if you click he browser defaullt back and forward button, run this  
             showSidebar.value = true;
             cartSlidebar.value = true;
         };
          document.getElementById("app").removeAttribute('data-page'); // delete data-page attribute in console
        
-    window.addEventListener('scroll', this.handleScroll); // scroll and run the handScroll function
+        window.addEventListener('scroll', this.handleScroll); // scroll and run the handScroll function
         // localStorage.removeItem('cart');
-        if(localStorage.getItem('cart') !== null){
-            // alert(localStorage.cart)
-            const cartarray= useForm(
+        // if(localStorage.getItem('cart') !== null){
+        //     // alert(localStorage.cart)
+        //     const cartarray= useForm(
             
-            {
-                'cart' : JSON.parse(localStorage.cart),
-            }
-            );
-            localStorage.removeItem('cart');
-            return cartarray.post(route('menu.update'));
+        //     {
+        //         'cart' : JSON.parse(localStorage.cart),
+        //     }
+        //     );
+        //     localStorage.removeItem('cart');
+        //     return cartarray.post(route('menu.update'));
+        // }
+
+        if(localStorage.getItem('cart') !== null){
+            this.pageload();
+        }else{
+            this.loadData();
         }
+
     },
     
     
@@ -654,7 +718,7 @@
                  }
              },
              filterprice(){
-                 if(this.cart){
+                 if(this.cart.length >0){
                      return this.cart.map( (el) => el.totalprice)
                  }else{
                      return 0

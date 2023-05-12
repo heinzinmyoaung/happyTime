@@ -50,16 +50,16 @@ class HandleInertiaRequests extends Middleware
                 'email' => $request->user()->email
             ] : null,
 
-            'cart' => $request->session()->has('cart') ?
+            // 'cart' => $request->session()->has('cart') ?
 
-                $request->session()->get('cart')
+            //     $request->session()->get('cart')
 
-                // [
+            //     // [
 
-                //     // 'additionprice' => $request->session('cart')->get('additionprice'),
-                //     // 'quantity' => $request->session('cart')->get('quantity'),
-                // ]
-                : null,
+            //     //     // 'additionprice' => $request->session('cart')->get('additionprice'),
+            //     //     // 'quantity' => $request->session('cart')->get('quantity'),
+            //     // ]
+            //     : null,
 
 
 
