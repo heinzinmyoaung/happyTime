@@ -1,7 +1,8 @@
 
 <template >
-<NavigationBar :length="categoriesfilter.length" :cartSlidebar="cartSlidebar" @myevent1 ="searchAction" @myevent2 ="CartSlideFun" :totalprice = "total()" :cartcount = "cartcount()"/>
-<!-- <nav>
+<NavigationBar :categoriesfilter="categoriesfilter" :activeIndex="activeIndex" :cartSlidebar="cartSlidebar" @myevent1 ="searchAction" @myevent2 ="CartSlideFun" @myevent3 = "scrollToElement" :totalprice = "total()" :cartcount = "cartcount()"/>
+<!-- <div ref="navbar"></div> -->
+<!-- <nav class="z-50">
     
     <ul>
       <li v-for="(category, index) in categoriesfilter" :key="category.id" class=" relative" :class="{  'text-red-500' : index === activeIndex}" >
@@ -26,9 +27,9 @@
  <!-- <div > -->
     <EmptySearch v-if="categoriesfilter.length <= 0"/>
     <div v-else class=" bg-gray-50  dark:bg-gray-800">
-     <div  v-for="category in categoriesfilter" :key="category.id" :id="category.id" class="container m-auto px-4 py-2 relative" >
+     <div  v-for="category in categoriesfilter" :key="category.id" :id="category.id" class="container m-auto px-4 py-2" >
          <span class=" font-medium text-lg md:text-2xl ">{{ category.category_name }}</span>
-         <div class=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-6 gap-4 py-4 md:py-8 relative cursor-pointer">
+         <div class=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-6 gap-4 py-4 md:py-8  cursor-pointer">
          
             <div v-for="menu in menufilter(category.id)" :key="menu.id">  <!-- to given the parameter in menufilter=>located (export default=>methods) -->
                  <Loadingpage v-if="isLoading" />
@@ -274,17 +275,6 @@
  import { useForm, Link } from '@inertiajs/vue3';
  import { ref } from 'vue';
  import axios from 'axios';
- 
- 
- 
- 
- const scrollToElement = (ac) =>  {
-   const el = document.getElementById(ac);
-     // console.log(ac)
-   if (el) {
-     el.scrollIntoView({ behavior: 'smooth' });
-   }
- }
  
  
  const showSidebar = ref(true)
@@ -620,20 +610,6 @@
                      return 0
                  }
         },
-        
-        handleScroll(){
-            const scrollY = window.scrollY; // get the current scroll Y position
-            const heights = this.categoriesfilter.map(el => document.getElementById(el.id).offsetTop );// get the offsetTop of each content section
-            const activeIndex = heights.findIndex((height, index) => height > scrollY )-1; // find the index of the active section based on the scroll position
-            if (activeIndex !== this.activeIndex) {
-                this.activeIndex = activeIndex; // update the active index
-                if(this.activeIndex == -2){
-                    this.activeIndex = heights.length-1
-                }
-
-            }
-           
-        },
         onForwardNavigation() {
             this.showSidebar = true
         },
@@ -645,7 +621,40 @@
         CartSlideFun(cartslidebar){
             cartSlidebar.value = cartslidebar
             // console.log(cartslidebar)
+        },
+        ////////////////////click Cateogry title in Navbar and Scroll to this title///////
+        handleScroll(){
+            const scrollY = window.scrollY; // get the current scroll Y position
+            // const navbarheight = this.$refs.navheight.$refs.navheight.offsetHeight
+            const navbarheight = document.getElementById('navbarheight').offsetHeight
+
+            const heights = this.categoriesfilter.map(el => document.getElementById(el.id).offsetTop - navbarheight -2 );// get the offsetTop of each content section
+            // console.log(heights)
+            const activeIndex = heights.findIndex((height, index) => height > scrollY )-1; // find the index of the active section based on the scroll position
+            if (activeIndex !== this.activeIndex) {
+                this.activeIndex = activeIndex; // update the active index
+                if(this.activeIndex == -2){
+                    this.activeIndex = heights.length - 1
+                }
+
+            }
+            this.scrlltoElementInNav(activeIndex+1)
+           
+        },
+        scrollToElement(categroyid){
+            // const navbarheight = this.$refs.navheight.$refs.navheight.offsetHeight
+            const navbarheight = document.getElementById('navbarheight').offsetHeight
+            const el = document.getElementById(categroyid).offsetTop - navbarheight;
+            window.scrollTo({top: el ,behavior: 'smooth' });
+           
+        },
+        scrlltoElementInNav(navcategroyid){
+            const navbar = document.getElementById("navbarCategoryName");
+            const categoryIdOffset = document.getElementById('id-' + navcategroyid).offsetLeft - (navbar.offsetWidth/4); //Navbar Category Title Center
+            navbar.scrollTo({left: categoryIdOffset ,inline: 'center'})
+            
         }
+        ///////////////  End  /////////////////
         
     },
      
