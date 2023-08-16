@@ -91,7 +91,7 @@
             <div class=" flex-none px-2 first-of-type:pl-0 last-of-type:pr-0 md:px-8 lg:px-14 snap-x " v-for="(category, index) in categoriesfilter" :id="'id-' + category.id">
                 <div class=" cursor-pointer rounded-full snap-start" :class="{  'bg-green-600' : index === activeIndex}" @click="categoryNameFilter(category.id)"> 
                     <img src="./images/32f685a1fddebf657f6a7f2f55b6f8bb.png" class=" inline w-8 h-8 md:w-10 md:h-10 overflow-hidden rounded-full text-sm md:text-base" alt="">
-                    <span class="px-2">{{ category.category_name }}</span>
+                    <span class="px-2 text-base md:text-base">{{ category.category_name }}</span>
                 </div>
             </div>
         </div>

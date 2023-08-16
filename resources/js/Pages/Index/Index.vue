@@ -19,17 +19,15 @@
  <div v-for="carts in cart">cartSlidebar
      {{ carts }}
  </div> -->
-
- <div>{{ cart.count }}</div>
  
  <!-- ///////Start => Filter menu data by Category -->
  <!-- :class="{ '-translate-x-full' : showSidebar}" @click="showSidebar = !showSidebar" -->
  <!-- <div > -->
     <EmptySearch v-if="categoriesfilter.length <= 0"/>
-    <div v-else class=" bg-gray-50  dark:bg-gray-800">
-     <div  v-for="category in categoriesfilter" :key="category.id" :id="category.id" class="container m-auto px-4 py-2" >
-         <span class=" font-medium text-lg md:text-2xl ">{{ category.category_name }}</span>
-         <div class=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-6 gap-4 py-4 md:py-8  cursor-pointer">
+    <div v-else class=" bg-gray-50  dark:bg-gray-800 ">
+     <div  v-for="category in categoriesfilter" :key="category.id" :id="category.id" class="container m-auto px-4 " >
+         <div class=" font-medium text-lg md:text-2xl pt-8 pb-4 md:pt-14 md:pb-8">{{ category.category_name }}</div>
+         <div class=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-6 gap-4 cursor-pointer">
          
             <div v-for="menu in menufilter(category.id)" :key="menu.id">  <!-- to given the parameter in menufilter=>located (export default=>methods) -->
                  <Loadingpage v-if="isLoading" />
@@ -40,7 +38,7 @@
                          </a>
                      </div>
      
-                     <h3 class=" mt-2 text-sm md:text-base tracking-tight truncate" >{{ menu.product_name }}</h3>
+                     <h3 class=" mt-2 text-sm md:text-base tracking-tight truncate" ><span v-for="carts in cartfilter(menu.id)" class=" text-green-600 pr-2 ">{{ carts.quantity }}x</span>{{ menu.product_name }}</h3>
                      <p class="text-gray-500 dark:text-gray-300 text-xs ">{{ menu.product_description }}</p>
      
                      <div class="flex justify-between mt-3 lg:mt-5 text-sm md:text-base lg:text-lg  text-green-500">
@@ -125,7 +123,7 @@
  
              </div>
              <div class="flex-auto w-full h-10 md:h-12 my-auto font-normal text-sm md:text-base">
-                 <button class="w-full h-full bg-green-600 rounded-md" @click="menucart(),aa(showSidebar),showSidebar = !showSidebar">Add to basket {{  $filters.formattedCurrency((basedprice+additionprice)*addplus)}}</button>
+                 <button class="w-full h-full bg-green-600 rounded-md" @click="menucart(),aa(showSidebar),showSidebar = !showSidebar">Add to basket {{  $filters.formattedCurrency((basedprice+price)*addplus)}}</button> 
              </div> 
          </div>
  
@@ -321,7 +319,6 @@
          shoppingcartindex: null,
          storequantity: 1,
          checkid: null,
-         // additionalname: []
          timeoutId: null,
          query: '',
          activeIndex: -1,
@@ -403,6 +400,12 @@
              
              // return this.menus.filter(n=>n.category_id == fakeId) // fakeId is accepted the parameter given above
              },
+             cartfilter(foodid){
+                if(this.cart.length > 0){
+                    return this.cart.filter(n=>n.foodid == foodid) ;
+                }
+
+        },
         
  
  ///////// scroll is fixed when the sliderbar is shown
@@ -628,7 +631,7 @@
             // const navbarheight = this.$refs.navheight.$refs.navheight.offsetHeight
             const navbarheight = document.getElementById('navbarheight').offsetHeight
 
-            const heights = this.categoriesfilter.map(el => document.getElementById(el.id).offsetTop - navbarheight -2 );// get the offsetTop of each content section
+            const heights = this.categoriesfilter.map(el => document.getElementById(el.id).offsetTop - navbarheight -2);// get the offsetTop of each content section
             // console.log(heights)
             const activeIndex = heights.findIndex((height, index) => height > scrollY )-1; // find the index of the active section based on the scroll position
             if (activeIndex !== this.activeIndex) {
@@ -672,18 +675,7 @@
          document.getElementById("app").removeAttribute('data-page'); // delete data-page attribute in console
        
         window.addEventListener('scroll', this.handleScroll); // scroll and run the handScroll function
-        // localStorage.removeItem('cart');
-        // if(localStorage.getItem('cart') !== null){
-        //     // alert(localStorage.cart)
-        //     const cartarray= useForm(
-            
-        //     {
-        //         'cart' : JSON.parse(localStorage.cart),
-        //     }
-        //     );
-        //     localStorage.removeItem('cart');
-        //     return cartarray.post(route('menu.update'));
-        // }
+
 
         if(localStorage.getItem('cart') !== null){
             this.pageload();
@@ -707,33 +699,30 @@
                  }
              
          },
-             price(){
-                 this.additionprice = 0
-                 this.additionalname =[]
-                 console.log(this.additionalarray)
-                 for(let i=0;i<this.additionalarray.length;i++){
-                     console.log(this.additionalarray[i])
- 
-                     // this.additionalarray.filter(el=>el[i] == )
-                     const price = this.addondetails.filter(el=>el.id == this.additionalarray[i]).reduce(el=>el)
-                     console.log(price.addondetail_price)
- 
-                     this.additionprice += price.addondetail_price
-                     this.additionalname[i] = price.addondetail_name
- 
-                     console.log(this.additionprice)
-                     console.log(this.additionalname)
-                     
-                 }
-             },
-             filterprice(){
-                 if(this.cart.length >0){
-                     return this.cart.map( (el) => el.totalprice)
-                 }else{
-                     return 0
-                 }
-                 
-             }
+        price(){
+            this.additionprice = 0
+            for(let i=0;i<this.additionalarray.length;i++){
+                console.log(this.additionalarray[i])
+
+                // this.additionalarray.filter(el=>el[i] == )
+                const price = this.addondetails.filter(el=>el.id == this.additionalarray[i]).reduce(el=>el)
+                console.log(price.addondetail_price)
+
+                this.additionprice += price.addondetail_price
+
+                // console.log(this.additionprice)
+                
+            }
+            return this.additionprice;
+        },
+        filterprice(){
+            if(this.cart.length >0){
+                return this.cart.map( (el) => el.totalprice)
+            }else{
+                return 0
+            }
+            
+        }
              
  
  }
